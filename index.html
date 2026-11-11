@@ -50,6 +50,7 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            touch-action: manipulation;
         }
 
         #yesButton {
@@ -63,6 +64,20 @@
             font-size: 16px;
             padding: 10px 20px;
             position: relative;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 30px 15px;
+            }
+
+            h1 {
+                font-size: 25px;
+            }
+
+            p {
+                font-size: 16px;
+            }
         }
     </style>
 </head>
@@ -95,13 +110,20 @@
         const yesButton = document.getElementById('yesButton');
         const noButton = document.getElementById('noButton');
 
+        // Desktop: move on hover
         yesButton.addEventListener('mouseenter', moveYesButton);
+
+        // Mobile: move on touch
+        yesButton.addEventListener('touchstart', function(event) {
+            event.preventDefault();
+            moveYesButton();
+        }, { passive: false });
 
         function moveYesButton() {
 
             yesButton.style.position = 'fixed';
 
-            const padding = 50;
+            const padding = 20;
             const minDistance = 200;
 
             const maxX = window.innerWidth - yesButton.offsetWidth - padding;
@@ -114,10 +136,9 @@
 
             let randomX, randomY;
             let isTooClose = true;
-
             let attempts = 0;
 
-            while (isTooClose && attempts < 100) {
+            while (isTooClose && attempts < 200) {
 
                 attempts++;
 
@@ -135,7 +156,6 @@
                 isTooClose = distance < minDistance;
             }
 
-            // Apply the new position
             if (!isTooClose) {
                 yesButton.style.left = randomX + 'px';
                 yesButton.style.top = randomY + 'px';
